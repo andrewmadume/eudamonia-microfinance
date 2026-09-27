@@ -1,0 +1,10 @@
+// Shared interaction: mobile navigation, form feedback, reveal effects, and return-to-top.
+const menu=document.querySelector('.menu'), links=document.querySelector('.nav-links');
+menu?.addEventListener('click',()=>{const open=links.classList.toggle('open');menu.setAttribute('aria-expanded',open);});
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>links?.classList.remove('open')));
+// Keep the Impact page visible in the shared navigation without duplicating links on every page.
+document.querySelectorAll('.nav-links').forEach(nav=>{if(!nav.querySelector('[href="impact.html"]')){const link=document.createElement('a');link.href='impact.html';link.textContent='Impact';const contact=nav.querySelector('[href="contact.html"]');nav.insertBefore(link,contact)}});
+document.querySelectorAll('footer h3').forEach(heading=>{if(heading.textContent==='Explore'&&!heading.parentElement.querySelector('[href="impact.html"]')){const link=document.createElement('a');link.href='impact.html';link.textContent='Our impact';heading.parentElement.append(link)}});
+const topButton=document.querySelector('.to-top');window.addEventListener('scroll',()=>topButton?.classList.toggle('show',scrollY>450));topButton?.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.querySelector('.form')?.addEventListener('submit',e=>{e.preventDefault();const form=e.currentTarget,status=form.querySelector('.form-status');if(!form.checkValidity()){status.textContent='Please complete the required fields before sending your enquiry.';status.className='form-status error';form.reportValidity();return}status.textContent='Thank you — your enquiry is ready to be sent. Our team will contact you shortly.';status.className='form-status success';form.reset();});
